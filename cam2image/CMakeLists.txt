@@ -49,6 +49,7 @@ function(add_executable_for_each_rmw_impl executable)
 
 endfunction()
 
-add_executable_for_each_rmw_impl(${PROJECT_NAME} src/cam2image.cpp)
+add_executable_for_each_rmw_impl(cam2image src/cam2image.cpp)
+add_executable_for_each_rmw_impl(showimage src/showimage.cpp)
 
 ament_package()

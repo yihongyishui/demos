@@ -103,6 +103,7 @@ int main(int argc, char * argv[])
         convert_frame_to_message(flipped_frame, i, msg);
       }
       std::cout << "Publishing image #" << i << std::endl;
+      msg->header.frame_id = std::to_string(i);
       pub->publish(msg);
       ++i;
     }
