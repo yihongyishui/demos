@@ -48,7 +48,7 @@ encoding2mat_type(const std::string & encoding)
 }
 
 void convert_frame_to_message(
-  const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr& msg)
+  const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr & msg)
 {
   // assign cv information into ros message
   // if msg is null, it's never been assigned, so we should allocate it

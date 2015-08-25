@@ -37,7 +37,6 @@ public:
     int device = 0, int width = 320, int height = 240)
   : Node(node_name, use_intra_process_comms)
   {
-    
     // Initialize OpenCV
     cap_.open(device);
     cap_.set(CV_CAP_PROP_FRAME_WIDTH, static_cast<double>(width));
@@ -62,13 +61,11 @@ public:
           throw std::runtime_error("Image message was null");
           return;
         }
-        std::cout << "Publishing image message" << std::endl;
         pub_->publish(image_msg_);
         ++msg_number_;
       };
 
     timer_ = this->create_wall_timer(update_period, pub_callback);
-    std::cout << "Finished device node initialization" << std::endl;
   }
 
 private:

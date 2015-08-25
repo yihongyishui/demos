@@ -56,6 +56,7 @@ public:
   }
 
 private:
+  rclcpp::WallTimer::SharedPtr timer_;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub_;
 
   std::shared_ptr<cv::Mat> frame_;

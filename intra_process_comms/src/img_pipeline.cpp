@@ -27,7 +27,7 @@ int main(int argc, char * argv[])
   rclcpp::Node::SharedPtr deviceNode = std::make_shared<intra_process_comms::DeviceNode>();
   rclcpp::Node::SharedPtr extractorNode = std::make_shared<intra_process_comms::ExtractorNode>();
   rclcpp::Node::SharedPtr modifierNode = std::make_shared<intra_process_comms::ModifierNode>();
-  rclcpp::Node::SharedPtr visualizerNode = std::make_shared<intra_process_comms::ModifierNode>();
+  rclcpp::Node::SharedPtr visualizerNode = std::make_shared<intra_process_comms::VisualizerNode>();
 
   executor.add_node(deviceNode);
   executor.add_node(extractorNode);

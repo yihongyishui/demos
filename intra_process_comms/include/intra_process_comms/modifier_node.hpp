@@ -33,11 +33,9 @@ public:
   RCLCPP_SMART_PTR_DEFINITIONS(ModifierNode);
 
   ModifierNode(const std::string & node_name = "img_modifier",
-    bool use_intra_process_comms = true,
-    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000))
+    bool use_intra_process_comms = true)
   : Node(node_name, use_intra_process_comms)
   {
-    wait_key_period_ = std::chrono::duration_cast<std::chrono::milliseconds>(update_period);
     rmw_qos_profile_t qos = rmw_qos_profile_default;
     qos.depth = 16;
     // after getting the first message, reassign based on encoding type
@@ -51,6 +49,9 @@ public:
         cv::bitwise_not(*frame_, *frame_);
 
         convert_frame_to_message(*frame_, msg_number_, image_msg_);
+        if (!image_msg_) {
+          throw std::runtime_error("publishing NULL image!");
+        }
         img_pub_->publish(image_msg_);
         ++msg_number_;
       };
