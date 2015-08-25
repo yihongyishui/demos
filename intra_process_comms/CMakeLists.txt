@@ -11,6 +11,11 @@ find_package(rclcpp REQUIRED)
 find_package(rmw REQUIRED)
 find_package(rmw_implementation REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
+find_package(OpenCV REQUIRED)
+
+include_directories(include)
 
 ament_package()
 
@@ -21,4 +26,9 @@ ament_package()
 add_executable_for_each_rmw_implementations(intrapc
   src/intrapc.cpp
   TARGET_DEPENDENCIES "rclcpp" "std_msgs"
+  INSTALL)
+
+add_executable_for_each_rmw_implementations(img_pipeline
+  src/img_pipeline.cpp
+  TARGET_DEPENDENCIES "rclcpp" "std_msgs" "sensor_msgs" "OpenCV"
   INSTALL)
