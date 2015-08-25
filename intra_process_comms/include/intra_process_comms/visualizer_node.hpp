@@ -39,11 +39,12 @@ public:
   {
     wait_key_period_ = std::chrono::duration_cast<std::chrono::milliseconds>(update_period);
     rmw_qos_profile_t qos = rmw_qos_profile_default;
-    qos.depth = 2;
+    qos.depth = 16;
     // after getting the first message, reassign based on encoding type
 
     auto img_sub_callback =
       [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void {
+        std::cout << "Got image from modifier" << std::endl;
         convert_message_to_frame(msg, frame_);
 
         cv::imshow("Modified image", *frame_);

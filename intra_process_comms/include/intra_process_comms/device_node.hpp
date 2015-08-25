@@ -32,12 +32,12 @@ class DeviceNode : public rclcpp::Node
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(DeviceNode);
 
-  DeviceNode(const std::string & node_name = "camera_device", bool use_intra_process_comms = true,
-    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000),
+  DeviceNode(const std::string & node_name = "camera_device", bool use_intra_process_comms = false,
+    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(50000000),
     int device = 0, int width = 320, int height = 240)
   : Node(node_name, use_intra_process_comms)
   {
-
+    
     // Initialize OpenCV
     cap_.open(device);
     cap_.set(CV_CAP_PROP_FRAME_WIDTH, static_cast<double>(width));
@@ -46,7 +46,7 @@ public:
       throw std::runtime_error("Could not open video stream!");
     }
     rmw_qos_profile_t qos = rmw_qos_profile_default;
-    qos.depth = 2;
+    qos.depth = 16;
 
     pub_ = this->create_publisher<sensor_msgs::msg::Image>("image", qos);
 
@@ -58,11 +58,17 @@ public:
           return;
         }
         convert_frame_to_message(frame_, msg_number_, image_msg_);
+        if (!image_msg_) {
+          throw std::runtime_error("Image message was null");
+          return;
+        }
+        std::cout << "Publishing image message" << std::endl;
         pub_->publish(image_msg_);
         ++msg_number_;
       };
 
     timer_ = this->create_wall_timer(update_period, pub_callback);
+    std::cout << "Finished device node initialization" << std::endl;
   }
 
 private:

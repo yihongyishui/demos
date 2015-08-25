@@ -21,7 +21,6 @@
 
 int main(int argc, char * argv[])
 {
-
   rclcpp::init(argc, argv);
   rclcpp::executors::SingleThreadedExecutor executor;
 
@@ -32,6 +31,7 @@ int main(int argc, char * argv[])
 
   executor.add_node(deviceNode);
   executor.add_node(extractorNode);
+  executor.add_node(modifierNode);
   executor.add_node(visualizerNode);
 
   executor.spin();

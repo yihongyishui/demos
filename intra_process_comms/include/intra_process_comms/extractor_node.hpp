@@ -40,7 +40,7 @@ public:
   {
 
     rmw_qos_profile_t qos = rmw_qos_profile_default;
-    qos.depth = 2;
+    qos.depth = 16;
 
     image_msg_ = std::make_shared<sensor_msgs::msg::Image>();
     // after getting the first message, reassign based on encoding type
@@ -50,41 +50,33 @@ public:
 
     float range[] = {0, 255};
     const float * ranges[] = {range, range, range};
+
+    img_pub_ = this->create_publisher<sensor_msgs::msg::Image>("extracted_image", qos);
+
+    //feature_pub_ = this->create_publisher<sensor_msgs::msg::Image>("extracted_features", qos);
+
     // Subscribe to image
     auto sub_callback =
-      [this, &ranges](const sensor_msgs::msg::Image::SharedPtr msg) -> void {
+      [this, &ranges](sensor_msgs::msg::Image::SharedPtr msg) -> void {
+        std::cout << "Got image from device" << std::endl;
         image_msg_ = msg;
         convert_message_to_frame(image_msg_, frame_);
-        int channels = frame_->channels();
-        cv::calcHist(frame_.get(), 1, &channels, cv::Mat(), hist_, 3, &hist_dims_[0],
+        int channels[] = {0, 1, 2};
+        cv::calcHist(frame_.get(), 1, channels, cv::Mat(), hist_, 3, &hist_dims_[0],
           const_cast<const float **>(ranges));
-        // TODO Do something awesome with the histogram.
+        // TODO Do something awesome with the histogram
         convert_frame_to_message(hist_, msg_number_, hist_msg_);
+        img_pub_->publish(image_msg_);
+        //feature_pub_->publish(hist_msg_);
         ++msg_number_;
       };
 
     img_sub_ = this->create_subscription<sensor_msgs::msg::Image>("image", qos, sub_callback);
-
-    img_pub_ = this->create_publisher<sensor_msgs::msg::Image>("extracted_image", qos);
-
-    feature_pub_ = this->create_publisher<sensor_msgs::msg::Image>("extracted_features", qos);
-
-    auto pub_callback =
-      [this]() -> void {
-        // If frame hasn't been initialized yet, don't do anything.
-        if (!frame_) {
-          return;
-        }
-        img_pub_->publish(image_msg_);
-        feature_pub_->publish(hist_msg_);
-      };
-
-    timer_ = this->create_wall_timer(update_period, pub_callback);
   }
 
 private:
   rclcpp::Publisher::SharedPtr img_pub_;
-  rclcpp::Publisher::SharedPtr feature_pub_;
+  //rclcpp::Publisher::SharedPtr feature_pub_;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub_;
   rclcpp::WallTimer::SharedPtr timer_;
 

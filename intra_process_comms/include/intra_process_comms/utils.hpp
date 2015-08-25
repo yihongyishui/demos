@@ -48,12 +48,13 @@ encoding2mat_type(const std::string & encoding)
 }
 
 void convert_frame_to_message(
-  const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr msg)
+  const cv::Mat & frame, size_t frame_id, sensor_msgs::msg::Image::SharedPtr& msg)
 {
   // assign cv information into ros message
   // if msg is null, it's never been assigned, so we should allocate it
   size_t size = frame.step * frame.rows;
   if (!msg) {
+    std::cerr << "message is null, initializing dims based on cv::Mat" << std::endl;
     msg = std::make_shared<sensor_msgs::msg::Image>();
     msg->height = frame.rows;
     msg->width = frame.cols;
@@ -74,11 +75,15 @@ void convert_frame_to_message(
   memcpy(&msg->data[0], frame.data, size);
 
   msg->header.frame_id = std::to_string(frame_id);
+
+  if (!msg) {
+    throw std::runtime_error("message was null before returning from convert_frame");
+  }
 }
 
 void convert_message_to_frame(
-  const sensor_msgs::msg::Image::SharedPtr msg,
-  std::shared_ptr<cv::Mat> frame)
+  const sensor_msgs::msg::Image::SharedPtr & msg,
+  std::shared_ptr<cv::Mat> & frame)
 {
   if (!msg) {
     throw std::runtime_error("Null message cannot be converted to OpenCV frame!");
