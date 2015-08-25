@@ -16,7 +16,8 @@
 #define INTRA_PROCESS_COMMS_UTILS_HPP_
 
 std::string
-mat_type2encoding(int mat_type) {
+mat_type2encoding(int mat_type)
+{
   switch (mat_type) {
     case CV_8UC1:
       return "mono8";
@@ -32,7 +33,8 @@ mat_type2encoding(int mat_type) {
 }
 
 int
-encoding2mat_type(const std::string & encoding) {
+encoding2mat_type(const std::string & encoding)
+{
   if (encoding == "mono8") {
     return CV_8UC1;
   } else if (encoding == "bgr8") {
@@ -62,8 +64,9 @@ void convert_frame_to_message(
     // We are overwriting an existing msg. Check that the dimensions are the same
     auto frame_step = static_cast<sensor_msgs::msg::Image::_step_type>(frame.step);
     if (static_cast<int>(msg->height) != frame.rows ||
-        static_cast<int>(msg->width) != frame.cols ||
-        msg->encoding != mat_type2encoding(frame.type()) || msg->step != frame_step) {
+      static_cast<int>(msg->width) != frame.cols ||
+      msg->encoding != mat_type2encoding(frame.type()) || msg->step != frame_step)
+    {
       throw std::runtime_error("Invalid dimension change requested");
     }
   }
@@ -86,9 +89,10 @@ void convert_message_to_frame(
   } else {
     auto frame_step = static_cast<sensor_msgs::msg::Image::_step_type>(frame->step);
     if (static_cast<int>(msg->height) != frame->rows ||
-        static_cast<int>(msg->width) != frame->cols ||
-        msg->encoding != mat_type2encoding(frame->type()) ||
-        msg->step != frame_step) {
+      static_cast<int>(msg->width) != frame->cols ||
+      msg->encoding != mat_type2encoding(frame->type()) ||
+      msg->step != frame_step)
+    {
       throw std::runtime_error("Invalid dimension change requested");
     }
   }

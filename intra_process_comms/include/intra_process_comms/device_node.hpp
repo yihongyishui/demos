@@ -24,16 +24,19 @@
 
 #include "intra_process_comms/utils.hpp"
 
-namespace intra_process_comms {
+namespace intra_process_comms
+{
 
-class DeviceNode : public rclcpp::Node {
+class DeviceNode : public rclcpp::Node
+{
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(DeviceNode);
 
   DeviceNode(const std::string & node_name = "camera_device", bool use_intra_process_comms = true,
-             std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000),
-             int device = 0, int width = 320, int height = 240) :
-      Node(node_name, use_intra_process_comms) {
+    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000),
+    int device = 0, int width = 320, int height = 240)
+  : Node(node_name, use_intra_process_comms)
+  {
 
     // Initialize OpenCV
     cap_.open(device);

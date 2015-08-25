@@ -24,16 +24,19 @@
 
 #include "intra_process_comms/utils.hpp"
 
-namespace intra_process_comms {
+namespace intra_process_comms
+{
 
-class VisualizerNode : public rclcpp::Node {
+class VisualizerNode : public rclcpp::Node
+{
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(VisualizerNode);
 
   VisualizerNode(const std::string & node_name = "img_visualizer",
-      bool use_intra_process_comms = true,
-      std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000))  :
-      Node(node_name, use_intra_process_comms) {
+    bool use_intra_process_comms = true,
+    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000))
+  : Node(node_name, use_intra_process_comms)
+  {
     wait_key_period_ = std::chrono::duration_cast<std::chrono::milliseconds>(update_period);
     rmw_qos_profile_t qos = rmw_qos_profile_default;
     qos.depth = 2;
@@ -47,7 +50,8 @@ public:
         cv::waitKey(wait_key_period_.count());
       };
 
-    img_sub_ = this->create_subscription<sensor_msgs::msg::Image>("modified_image", qos, img_sub_callback);
+    img_sub_ = this->create_subscription<sensor_msgs::msg::Image>("modified_image", qos,
+        img_sub_callback);
   }
 
 private:

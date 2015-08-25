@@ -19,7 +19,8 @@
 #include "intra_process_comms/modifier_node.hpp"
 #include "intra_process_comms/visualizer_node.hpp"
 
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[])
+{
 
   rclcpp::init(argc, argv);
   rclcpp::executors::SingleThreadedExecutor executor;

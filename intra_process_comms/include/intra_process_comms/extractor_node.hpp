@@ -24,17 +24,20 @@
 
 #include "intra_process_comms/utils.hpp"
 
-namespace intra_process_comms {
+namespace intra_process_comms
+{
 
-class ExtractorNode : public rclcpp::Node {
+class ExtractorNode : public rclcpp::Node
+{
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(ExtractorNode);
 
   ExtractorNode(const std::string & node_name = "feature_extractor",
-      bool use_intra_process_comms = true,
-      std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000),
-      int histogram_r = 30, int histogram_g = 30, int histogram_b = 30)  :
-      Node(node_name, use_intra_process_comms) {
+    bool use_intra_process_comms = true,
+    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000),
+    int histogram_r = 30, int histogram_g = 30, int histogram_b = 30)
+  : Node(node_name, use_intra_process_comms)
+  {
 
     rmw_qos_profile_t qos = rmw_qos_profile_default;
     qos.depth = 2;
@@ -46,14 +49,15 @@ public:
     hist_dims_[2] = histogram_b;
 
     float range[] = {0, 255};
-    const float* ranges[] = {range, range, range};
+    const float * ranges[] = {range, range, range};
     // Subscribe to image
     auto sub_callback =
       [this, &ranges](const sensor_msgs::msg::Image::SharedPtr msg) -> void {
         image_msg_ = msg;
         convert_message_to_frame(image_msg_, frame_);
         int channels = frame_->channels();
-        cv::calcHist(frame_.get(), 1, &channels, cv::Mat(), hist_, 3, &hist_dims_[0], const_cast<const float**>(ranges));
+        cv::calcHist(frame_.get(), 1, &channels, cv::Mat(), hist_, 3, &hist_dims_[0],
+          const_cast<const float **>(ranges));
         // TODO Do something awesome with the histogram.
         convert_frame_to_message(hist_, msg_number_, hist_msg_);
         ++msg_number_;
