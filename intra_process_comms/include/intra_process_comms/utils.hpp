@@ -60,7 +60,7 @@ void convert_frame_to_message(
     msg->width = frame.cols;
     msg->encoding = mat_type2encoding(frame.type());
     msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(frame.step);
-    msg->data.resize(size);
+    msg->data.reserve(size);
   } else {
     // We are overwriting an existing msg. Check that the dimensions are the same
     auto frame_step = static_cast<sensor_msgs::msg::Image::_step_type>(frame.step);
@@ -71,8 +71,8 @@ void convert_frame_to_message(
       throw std::runtime_error("Invalid dimension change requested");
     }
   }
-  // TODO: assign, don't copy
-  memcpy(&msg->data[0], frame.data, size);
+  // this still copies into msg->data. can we directly assign to the std::vector pointer?
+  msg->data.assign(frame.data, frame.data + size);
 
   msg->header.frame_id = std::to_string(frame_id);
 
@@ -101,10 +101,8 @@ void convert_message_to_frame(
       throw std::runtime_error("Invalid dimension change requested");
     }
   }
-  size_t size = msg->step * msg->height;
 
-  // TODO: assign, don't copy?
-  memcpy(frame->data, &msg->data[0], size);
+  frame->data = msg->data.data();
 }
 
 #endif

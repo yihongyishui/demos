@@ -43,7 +43,6 @@ public:
 
     auto img_sub_callback =
       [this](sensor_msgs::msg::Image::SharedPtr msg) -> void {
-        std::cout << "Got image from extractor" << std::endl;
         convert_message_to_frame(msg, frame_);
 
         cv::bitwise_not(*frame_, *frame_);

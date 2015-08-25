@@ -33,7 +33,7 @@ public:
   RCLCPP_SMART_PTR_DEFINITIONS(DeviceNode);
 
   DeviceNode(const std::string & node_name = "camera_device", bool use_intra_process_comms = false,
-    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(50000000),
+    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(30000000),
     int device = 0, int width = 320, int height = 240)
   : Node(node_name, use_intra_process_comms)
   {

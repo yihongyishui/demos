@@ -34,7 +34,7 @@ public:
 
   VisualizerNode(const std::string & node_name = "img_visualizer",
     bool use_intra_process_comms = true,
-    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(1000000))
+    std::chrono::nanoseconds update_period = std::chrono::nanoseconds(30000000))
   : Node(node_name, use_intra_process_comms)
   {
     wait_key_period_ = std::chrono::duration_cast<std::chrono::milliseconds>(update_period);
@@ -44,11 +44,11 @@ public:
 
     auto img_sub_callback =
       [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void {
-        std::cout << "Got image from modifier" << std::endl;
         convert_message_to_frame(msg, frame_);
 
         cv::imshow("Modified image", *frame_);
         cv::waitKey(wait_key_period_.count());
+        // TODO: Check waitkey for quit key
       };
 
     img_sub_ = this->create_subscription<sensor_msgs::msg::Image>("modified_image", qos,

@@ -51,8 +51,8 @@ public:
     // Subscribe to image
     auto sub_callback =
       [this](sensor_msgs::msg::Image::SharedPtr msg) -> void {
-        std::cout << "Got image from device" << std::endl;
         image_msg_ = msg;
+        img_pub_->publish(image_msg_);
         convert_message_to_frame(image_msg_, frame_);
 
         if (planes_.empty()) {
@@ -66,9 +66,6 @@ public:
         cv::calcHist(&planes_[1], 1, 0, cv::Mat(), g_hist_, 1, &histSize, &histRange);
         cv::calcHist(&planes_[2], 1, 0, cv::Mat(), r_hist_, 1, &histSize, &histRange);
 
-        img_pub_->publish(image_msg_);
-        //feature_pub_->publish(hist_msg_);
-        ++msg_number_;
       };
 
     img_sub_ = this->create_subscription<sensor_msgs::msg::Image>("image", qos, sub_callback);
@@ -83,7 +80,6 @@ private:
   sensor_msgs::msg::Image::SharedPtr image_msg_;
 
   std::shared_ptr<cv::Mat> frame_;
-  size_t msg_number_ = 0;
 
   std::vector<cv::Mat> planes_;
   cv::Mat r_hist_;
