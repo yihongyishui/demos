@@ -41,17 +41,14 @@ public:
     // after getting the first message, reassign based on encoding type
     img_pub_ = this->create_publisher<sensor_msgs::msg::Image>("modified_image", qos);
 
+    // TODO: Copy occurs here. Change to UniquePtr once implemented
     auto img_sub_callback =
       [this](sensor_msgs::msg::Image::SharedPtr msg) -> void {
         convert_message_to_frame(msg, frame_);
 
         cv::bitwise_not(*frame_, *frame_);
 
-        convert_frame_to_message(*frame_, msg_number_, image_msg_);
-        if (!image_msg_) {
-          throw std::runtime_error("publishing NULL image!");
-        }
-        img_pub_->publish(image_msg_);
+        img_pub_->publish(msg);
         ++msg_number_;
       };
 
@@ -62,8 +59,6 @@ public:
 private:
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub_;
   rclcpp::Publisher::SharedPtr img_pub_;
-
-  sensor_msgs::msg::Image::SharedPtr image_msg_;
 
   std::shared_ptr<cv::Mat> frame_;
   size_t msg_number_ = 0;

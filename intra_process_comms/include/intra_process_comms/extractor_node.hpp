@@ -50,7 +50,7 @@ public:
 
     // Subscribe to image
     auto sub_callback =
-      [this](sensor_msgs::msg::Image::SharedPtr msg) -> void {
+      [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void {
         image_msg_ = msg;
         img_pub_->publish(image_msg_);
         convert_message_to_frame(image_msg_, frame_);
@@ -62,6 +62,9 @@ public:
         float range[] = {0, 256};
         const float * histRange = {range};
         // TODO: encoding type
+        if (planes_.size() < 3) {
+          throw std::runtime_error("Image wasn't split into 3 channels!");
+        }
         cv::calcHist(&planes_[0], 1, 0, cv::Mat(), b_hist_, 1, &histSize, &histRange);
         cv::calcHist(&planes_[1], 1, 0, cv::Mat(), g_hist_, 1, &histSize, &histRange);
         cv::calcHist(&planes_[2], 1, 0, cv::Mat(), r_hist_, 1, &histSize, &histRange);
