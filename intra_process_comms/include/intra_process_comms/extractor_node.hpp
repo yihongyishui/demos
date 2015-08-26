@@ -46,8 +46,6 @@ public:
     // after getting the first message, reassign based on encoding type
     img_pub_ = this->create_publisher<sensor_msgs::msg::Image>("extracted_image", qos);
 
-    //feature_pub_ = this->create_publisher<sensor_msgs::msg::Image>("extracted_features", qos);
-
     // Subscribe to image
     auto sub_callback =
       [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void {
@@ -55,20 +53,16 @@ public:
         img_pub_->publish(image_msg_);
         convert_message_to_frame(image_msg_, frame_);
 
-        if (planes_.empty()) {
-          cv::split(*frame_, planes_);
-        }
         int histSize = 32;
         float range[] = {0, 256};
         const float * histRange = {range};
         // TODO: encoding type
-        if (planes_.size() < 3) {
-          throw std::runtime_error("Image wasn't split into 3 channels!");
-        }
-        cv::calcHist(&planes_[0], 1, 0, cv::Mat(), b_hist_, 1, &histSize, &histRange);
-        cv::calcHist(&planes_[1], 1, 0, cv::Mat(), g_hist_, 1, &histSize, &histRange);
-        cv::calcHist(&planes_[2], 1, 0, cv::Mat(), r_hist_, 1, &histSize, &histRange);
-
+        cv::Mat red = (*frame_)(red_range).reshape(1);
+        cv::Mat green = (*frame_)(green_range).reshape(1);
+        cv::Mat blue = (*frame_)(blue_range).reshape(1);
+        cv::calcHist(&red, 1, 0, cv::Mat(), b_hist_, 1, &histSize, &histRange);
+        cv::calcHist(&green, 1, 0, cv::Mat(), g_hist_, 1, &histSize, &histRange);
+        cv::calcHist(&blue, 1, 0, cv::Mat(), r_hist_, 1, &histSize, &histRange);
       };
 
     img_sub_ = this->create_subscription<sensor_msgs::msg::Image>("image", qos, sub_callback);
@@ -84,7 +78,10 @@ private:
 
   std::shared_ptr<cv::Mat> frame_;
 
-  std::vector<cv::Mat> planes_;
+  const cv::Range red_range[3] = {cv::Range::all(), cv::Range::all(), cv::Range(0, 0)};
+  const cv::Range blue_range[3] = {cv::Range::all(), cv::Range::all(), cv::Range(1, 2)};
+  const cv::Range green_range[3] = {cv::Range::all(), cv::Range::all(), cv::Range(2, 3)};
+
   cv::Mat r_hist_;
   cv::Mat g_hist_;
   cv::Mat b_hist_;
