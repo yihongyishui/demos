@@ -54,8 +54,8 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
   rclcpp::executors::SingleThreadedExecutor executor;
 
-  rclcpp::Node::SharedPtr producer = std::make_shared<Producer>("producer", true);
-  rclcpp::Node::SharedPtr consumer = std::make_shared<Consumer>("consumer", true);
+  auto producer = std::make_shared<Producer>("producer", true);
+  auto consumer = std::make_shared<Consumer>("consumer", true);
 
   executor.add_node(producer);
   executor.add_node(consumer);
