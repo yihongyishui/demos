@@ -28,6 +28,11 @@ add_executable_for_each_rmw_implementations(intrapc
   TARGET_DEPENDENCIES "rclcpp" "std_msgs"
   INSTALL)
 
+add_executable_for_each_rmw_implementations(two_node_pipeline
+  src/two_node_pipeline.cpp
+  TARGET_DEPENDENCIES "rclcpp" "std_msgs"
+  INSTALL)
+
 add_executable_for_each_rmw_implementations(img_pipeline
   src/img_pipeline.cpp
   TARGET_DEPENDENCIES "rclcpp" "sensor_msgs" "std_msgs" "OpenCV"
