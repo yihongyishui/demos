@@ -32,27 +32,27 @@ public:
     qos.depth = 1;
 
     sub_ = this->create_subscription<sensor_msgs::msg::Image>(input, qos,
-      [](sensor_msgs::msg::Image::UniquePtr & msg) {
-        cv::Mat cv_mat(
-          msg->width, msg->height,
-          encoding2mat_type(msg->encoding),
-          msg->data.data());
-        std::stringstream ss;
-        ss << msg.get();
-        cv::putText(cv_mat, ss.str(), cvPoint(30, 90),
-          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.5, cvScalar(0, 255, 0), 1, CV_AA);
-        cv::imshow("Image View", cv_mat);
-        char key = cv::waitKey(1);
-        if (key == 27 /* ESC */ || key == 'q') {
-          rclcpp::shutdown();
+        [](sensor_msgs::msg::Image::UniquePtr & msg) {
+      cv::Mat cv_mat(
+        msg->width, msg->height,
+        encoding2mat_type(msg->encoding),
+        msg->data.data());
+      std::stringstream ss;
+      ss << msg.get();
+      cv::putText(cv_mat, ss.str(), cvPoint(30, 90),
+      cv::FONT_HERSHEY_COMPLEX_SMALL, 0.5, cvScalar(0, 255, 0), 1, CV_AA);
+      cv::imshow("Image View", cv_mat);
+      char key = cv::waitKey(1);
+      if (key == 27 /* ESC */ || key == 'q') {
+        rclcpp::shutdown();
+      }
+      if (key == ' ') {
+        key = '_';
+        while (key != ' ') {
+          key = cv::waitKey(1);
         }
-        if (key == ' ') {
-          key = '_';
-          while (key != ' ') {
-            key = cv::waitKey(1);
-          }
-        }
-      });
+      }
+    });
 
   }
 

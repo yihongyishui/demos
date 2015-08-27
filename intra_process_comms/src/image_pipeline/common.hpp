@@ -56,10 +56,9 @@ mat_type2encoding(int mat_type)
 void set_now(builtin_interfaces::msg::Time & time)
 {
   std::chrono::nanoseconds now = std::chrono::high_resolution_clock::now().time_since_epoch();
-  if(now <= std::chrono::nanoseconds(0)) {
+  if (now <= std::chrono::nanoseconds(0)) {
     time.sec = time.nanosec = 0;
-  }
-  else {
+  } else {
     time.sec = now.count() / 1000000000;
     time.nanosec = now.count() % 1000000000;
   }

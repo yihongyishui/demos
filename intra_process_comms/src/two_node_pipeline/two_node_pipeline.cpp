@@ -20,7 +20,8 @@
 
 struct Producer : public rclcpp::Node
 {
-  Producer(std::string output, std::string name = "producer") : Node(name, true)
+  Producer(std::string output, std::string name = "producer")
+  : Node(name, true)
   {
     pub_ = this->create_publisher<std_msgs::msg::Int32>(output, rmw_qos_profile_default);
     timer_ = this->create_wall_timer(1_s, [this]() {
@@ -38,12 +39,13 @@ struct Producer : public rclcpp::Node
 
 struct Consumer : public rclcpp::Node
 {
-  Consumer(std::string input, std::string name = "consumer") : Node(name, true)
+  Consumer(std::string input, std::string name = "consumer")
+  : Node(name, true)
   {
     sub_ = this->create_subscription<std_msgs::msg::Int32>(
       input, rmw_qos_profile_default, [](std_msgs::msg::Int32::UniquePtr & msg) {
-        printf(" Received message with value: %d, and address: %p\n", msg->data, msg.get());
-      });
+      printf(" Received message with value: %d, and address: %p\n", msg->data, msg.get());
+    });
   }
 
   rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr sub_;
