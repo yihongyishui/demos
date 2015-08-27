@@ -33,7 +33,7 @@ add_executable_for_each_rmw_implementations(cyclic_pipeline
   TARGET_DEPENDENCIES "rclcpp" "std_msgs"
   INSTALL)
 
-add_executable_for_each_rmw_implementations(image_pipeline
+add_executable_for_each_rmw_implementations(image_pipeline_all_in_one
   src/image_pipeline/image_pipeline_all_in_one.cpp
   TARGET_DEPENDENCIES "rclcpp" "sensor_msgs" "std_msgs" "OpenCV"
   INSTALL)
