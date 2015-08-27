@@ -20,7 +20,7 @@
 
 struct Producer : public rclcpp::Node
 {
-  Producer(std::string output, std::string name = "producer")
+  Producer(const std::string & output, const std::string & name = "producer")
   : Node(name, true)
   {
     pub_ = this->create_publisher<std_msgs::msg::Int32>(output, rmw_qos_profile_default);
@@ -39,7 +39,7 @@ struct Producer : public rclcpp::Node
 
 struct Consumer : public rclcpp::Node
 {
-  Consumer(std::string input, std::string name = "consumer")
+  Consumer(const std::string & input, const std::string & name = "consumer")
   : Node(name, true)
   {
     sub_ = this->create_subscription<std_msgs::msg::Int32>(

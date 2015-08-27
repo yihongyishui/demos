@@ -21,7 +21,7 @@
 // This node receives an Int32, waits 1 second, then increments and sends it.
 struct IncrementerPipe : public rclcpp::Node
 {
-  IncrementerPipe(std::string name, std::string in, std::string out)
+  IncrementerPipe(const std::string & name, const std::string & in, const std::string & out)
   : Node(name, true)
   {
     pub = this->create_publisher<std_msgs::msg::Int32>(out, rmw_qos_profile_default);

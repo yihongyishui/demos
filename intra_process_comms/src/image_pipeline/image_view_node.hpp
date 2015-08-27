@@ -24,7 +24,7 @@
 class ImageViewNode : public rclcpp::Node
 {
 public:
-  ImageViewNode(std::string input, const std::string & node_name = "image_view_node")
+  ImageViewNode(const std::string & input, const std::string & node_name = "image_view_node")
   : Node(node_name, true)
   {
     rmw_qos_profile_t qos = rmw_qos_profile_default;

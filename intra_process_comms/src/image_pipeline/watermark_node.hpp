@@ -25,7 +25,7 @@ class WatermarkNode : public rclcpp::Node
 {
 public:
   WatermarkNode(
-    std::string input, std::string output, std::string text,
+    const std::string & input, const std::string & output, const std::string & text,
     const std::string & node_name = "watermark_node")
   : Node(node_name, true)
   {
