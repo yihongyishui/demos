@@ -23,17 +23,17 @@ ament_package()
 ## Example of intra-process comms
 ##
 
-add_executable_for_each_rmw_implementations(intrapc
-  src/intrapc.cpp
-  TARGET_DEPENDENCIES "rclcpp" "std_msgs"
-  INSTALL)
-
 add_executable_for_each_rmw_implementations(two_node_pipeline
-  src/two_node_pipeline.cpp
+  src/two_node_pipeline/two_node_pipeline.cpp
   TARGET_DEPENDENCIES "rclcpp" "std_msgs"
   INSTALL)
 
-add_executable_for_each_rmw_implementations(img_pipeline
-  src/img_pipeline.cpp
+add_executable_for_each_rmw_implementations(cyclic_pipeline
+  src/cyclic_pipeline/cyclic_pipeline.cpp
+  TARGET_DEPENDENCIES "rclcpp" "std_msgs"
+  INSTALL)
+
+add_executable_for_each_rmw_implementations(image_pipeline
+  src/image_pipeline/image_pipeline_all_in_one.cpp
   TARGET_DEPENDENCIES "rclcpp" "sensor_msgs" "std_msgs" "OpenCV"
   INSTALL)

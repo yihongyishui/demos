@@ -14,25 +14,22 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include "intra_process_comms/device_node.hpp"
-#include "intra_process_comms/extractor_node.hpp"
-#include "intra_process_comms/modifier_node.hpp"
-#include "intra_process_comms/visualizer_node.hpp"
+#include "camera_node.hpp"
+#include "image_view_node.hpp"
+#include "watermark_node.hpp"
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   rclcpp::executors::SingleThreadedExecutor executor;
 
-  rclcpp::Node::SharedPtr deviceNode = std::make_shared<intra_process_comms::DeviceNode>();
-  rclcpp::Node::SharedPtr extractorNode = std::make_shared<intra_process_comms::ExtractorNode>();
-  rclcpp::Node::SharedPtr modifierNode = std::make_shared<intra_process_comms::ModifierNode>();
-  rclcpp::Node::SharedPtr visualizerNode = std::make_shared<intra_process_comms::VisualizerNode>();
+  auto camera_node = std::make_shared<CameraNode>("image");
+  auto watermark_node = std::make_shared<WatermarkNode>("image", "image2", "Hello world!");
+  auto image_view_node = std::make_shared<ImageViewNode>("image2");
 
-  executor.add_node(deviceNode);
-  executor.add_node(extractorNode);
-  executor.add_node(modifierNode);
-  executor.add_node(visualizerNode);
+  executor.add_node(camera_node);
+  executor.add_node(watermark_node);
+  executor.add_node(image_view_node);
 
   executor.spin();
   return 0;
