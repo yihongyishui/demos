@@ -35,18 +35,19 @@ public:
 
     pub_ = this->create_publisher<sensor_msgs::msg::Image>(output, qos);
 
-    sub_ = this->create_subscription<sensor_msgs::msg::Image>(input, qos,
-        [this, text](sensor_msgs::msg::Image::UniquePtr & msg) {
-      cv::Mat cv_mat(
-        msg->width, msg->height,
-        encoding2mat_type(msg->encoding),
-        msg->data.data());
-      std::stringstream ss;
-      ss << msg.get() << " " << text;
-      cv::putText(cv_mat, ss.str(), cvPoint(30, 60),
-      cv::FONT_HERSHEY_COMPLEX_SMALL, 0.5, cvScalar(0, 255, 0), 1, CV_AA);
-      this->pub_->publish(msg);
-    });
+    sub_ = this->create_subscription_with_unique_ptr_callback<sensor_msgs::msg::Image>(
+      input, qos,
+      [this, text](sensor_msgs::msg::Image::UniquePtr msg) {
+        cv::Mat cv_mat(
+          msg->width, msg->height,
+          encoding2mat_type(msg->encoding),
+          msg->data.data());
+        std::stringstream ss;
+        ss << msg.get() << " " << text;
+        cv::putText(cv_mat, ss.str(), cvPoint(30, 60),
+        cv::FONT_HERSHEY_COMPLEX_SMALL, 0.5, cvScalar(0, 255, 0), 1, CV_AA);
+        this->pub_->publish(msg);
+      });
 
   }
 
