@@ -37,7 +37,7 @@ public:
 
     sub_ = this->create_subscription_with_unique_ptr_callback<sensor_msgs::msg::Image>(
       input, qos,
-      [this, text](sensor_msgs::msg::Image::UniquePtr msg) {
+      [this, text](sensor_msgs::msg::Image::UniquePtr & msg) {
         cv::Mat cv_mat(
           msg->width, msg->height,
           encoding2mat_type(msg->encoding),

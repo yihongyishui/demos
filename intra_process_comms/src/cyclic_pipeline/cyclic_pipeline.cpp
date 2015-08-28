@@ -27,7 +27,7 @@ struct IncrementerPipe : public rclcpp::Node
     pub = this->create_publisher<std_msgs::msg::Int32>(out, rmw_qos_profile_default);
     sub = this->create_subscription_with_unique_ptr_callback<std_msgs::msg::Int32>(
       in, rmw_qos_profile_default,
-      [this](std_msgs::msg::Int32::UniquePtr msg) {
+      [this](std_msgs::msg::Int32::UniquePtr & msg) {
         printf("Received message with value:         %d, and address: %p\n", msg->data, msg.get());
         printf("  sleeping for 1 second...\n");
         if (!rclcpp::sleep_for(1_s)) {
