@@ -53,6 +53,7 @@ struct IncrementerPipe : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
+  setbuf(stdout, NULL);
   rclcpp::init(argc, argv);
   rclcpp::executors::SingleThreadedExecutor executor;
 
