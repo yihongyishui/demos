@@ -111,7 +111,8 @@ if(AMENT_ENABLE_TESTING)
   # Add each test case.  Multi-executable tests can be specified in
   # semicolon-separated strings, like  exe1:exe2.
   set(demo_tests
-    cyclic_pipeline)
+    cyclic_pipeline
+    two_node_pipeline)
 
   macro(tests)
     foreach(demo_test ${demo_tests})
