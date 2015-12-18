@@ -109,7 +109,7 @@ if(AMENT_ENABLE_TESTING)
   endif()
 
   # Add each test case.  Multi-executable tests can be specified in
-  # semicolon-separated strings, like  exe1:exe2.
+  # colon-separated strings, like  exe1:exe2.
   set(demo_tests
     cyclic_pipeline
     two_node_pipeline)
