@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "image_view_node.hpp"
+#include "intra_process_demo/image_pipeline/image_view_node.hpp"
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -21,7 +21,7 @@
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  auto image_view_node = std::make_shared<ImageViewNode>("watermarked_image");
+  auto image_view_node = std::make_shared<ImageViewNode>("image");
   rclcpp::spin(image_view_node);
   return 0;
 }
