@@ -24,7 +24,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
-#include "common.hpp"
+#include "intra_process_demo/image_pipeline/common.hpp"
 
 // Node that receives an image, locates faces and draws boxes around them, and publishes it again.
 class FaceDetectorNode : public rclcpp::Node
@@ -51,6 +51,7 @@ public:
         msg->height, msg->width,
         encoding2mat_type(msg->encoding),
         msg->data.data());
+      cv::cvtColor(cv_mat, cv_mat, CV_BGR2RGB);
 
       cv::CascadeClassifier face_cascade;
       face_cascade.load("/home/adam/osrf/opencv/opencv/data/haarcascades/haarcascade_frontalface_default.xml");

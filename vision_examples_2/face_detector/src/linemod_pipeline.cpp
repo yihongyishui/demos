@@ -20,6 +20,7 @@
 #include "face_detector_node.hpp"
 #include "intra_process_demo/image_pipeline/image_view_node.hpp"
 #include "astra_camera/astra_driver.h"
+#include "linemod_node.hpp"
 
 int main(int argc, char * argv[])
 {
@@ -51,16 +52,14 @@ int main(int argc, char * argv[])
 
   astra_wrapper::AstraDriver drv(astra_node, astra_private_node, width, height, framerate, dwidth, dheight, dframerate, dformat);
 
-
-  auto face_detector_node =
-    std::make_shared<FaceDetectorNode>("image", "image_with_faces", "face_detector_node");
-  auto image_view_node = std::make_shared<ImageViewNode>("image_with_faces", "image_view_node", false);
-
+  auto linemod_node =
+    std::make_shared<LinemodNode>("image", "depth", "image_with_detections", "linemod_node");
+  auto image_view_node = std::make_shared<ImageViewNode>("image_with_detections", "image_view_node", false);
 
   // executor.add_node(camera_node);
   executor.add_node(astra_node);
   executor.add_node(astra_private_node);
-  executor.add_node(face_detector_node);
+  executor.add_node(linemod_node);
   executor.add_node(image_view_node);
 
   executor.spin();
