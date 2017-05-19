@@ -40,8 +40,11 @@ encoding2mat_type(const std::string & encoding)
     return CV_16SC1;
   } else if (encoding == "rgba8") {
     return CV_8UC4;
+  } else if (encoding == "32FC1" || encoding == "depth32") {
+    // Note: this may not be a display-friendly format!
+    return CV_32FC1;
   }
-  throw std::runtime_error(std::string("Unsupported mat type ").append(encoding));
+  throw std::runtime_error(std::string("Unsupported encoding ").append(encoding));
 }
 
 std::string
@@ -56,8 +59,11 @@ mat_type2encoding(int mat_type)
       return "mono16";
     case CV_8UC4:
       return "rgba8";
+    case CV_32FC1:
+      // Note: this may not be a display-friendly format!
+      return "depth32";
     default:
-      throw std::runtime_error("Unsupported encoding type");
+      throw std::runtime_error("Unsupported mat type");
   }
 }
 
