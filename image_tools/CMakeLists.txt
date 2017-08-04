@@ -75,7 +75,7 @@ if(BUILD_TESTING)
       ENV
       RCL_ASSERT_RMW_ID_MATCHES=${rmw_implementation}
       RMW_IMPLEMENTATION=${rmw_implementation}
-      TIMEOUT 30
+      TIMEOUT 60
     )
   endmacro()
 
