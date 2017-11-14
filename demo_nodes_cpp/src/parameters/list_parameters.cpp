@@ -50,6 +50,7 @@ int main(int argc, char ** argv)
     rclcpp::parameter::ParameterVariant("foo.second", 42),
     rclcpp::parameter::ParameterVariant("foobar", true),
   });
+  fprintf(stderr, "done setting \n");
 
   RCLCPP_INFO(node->get_logger(), "Listing parameters...")
   // List the details of a few parameters up to a namespace depth of 10.
