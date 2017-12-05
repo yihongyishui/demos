@@ -38,10 +38,10 @@ int main(int argc, char * argv[])
   exec.add_node(talker);
   auto listener = std::make_shared<composition::Listener>();
   exec.add_node(listener);
-  auto server = std::make_shared<composition::Server>();
-  exec.add_node(server);
-  auto client = std::make_shared<composition::Client>();
-  exec.add_node(client);
+  // auto server = std::make_shared<composition::Server>();
+  // exec.add_node(server);
+  // auto client = std::make_shared<composition::Client>();
+  // exec.add_node(client);
 
   // spin will block until work comes in, execute work as it becomes available, and keep blocking.
   // It will only be interrupted by Ctrl-C.

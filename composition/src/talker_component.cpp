@@ -15,11 +15,13 @@
 #include "composition/talker_component.hpp"
 
 #include <chrono>
+#include <cinttypes>
 #include <iostream>
 #include <memory>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+// #include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/u_int32.hpp"
 
 using namespace std::chrono_literals;
 
@@ -30,22 +32,28 @@ namespace composition
 // Components get built into shared libraries and as such do not write their own main functions.
 // The process using the component's shared library will instantiate the class as a ROS node.
 Talker::Talker()
-: Node("talker"), count_(0)
+: Node("talker", "", true), count_(0)
 {
   // Create a publisher of "std_mgs/String" messages on the "chatter" topic.
-  pub_ = create_publisher<std_msgs::msg::String>("chatter");
+  pub_ = create_publisher<std_msgs::msg::UInt32>("chatter", rmw_qos_profile_sensor_data);
 
   // Use a timer to schedule periodic message publishing.
-  timer_ = create_wall_timer(1s, std::bind(&Talker::on_timer, this));
+  timer_ = create_wall_timer(5ms, std::bind(&Talker::on_timer, this));
+
+  // std::unique_ptr<std_msgs::msg::UInt32> msg(new std_msgs::msg::UInt32());
 }
 
 void Talker::on_timer()
 {
-  auto msg = std::make_shared<std_msgs::msg::String>();
-  msg->data = "Hello World: " + std::to_string(++count_);
-  printf("Publishing: '%s'\n", msg->data.c_str());
-  std::flush(std::cout);
-
+  std::unique_ptr<std_msgs::msg::UInt32> msg(new std_msgs::msg::UInt32());
+  msg->data = ++count_ % UINT32_MAX;
+  if (0 == count_ % 1000) {
+    // printf("Publishing: '%s'\n", msg->data.c_str());
+    printf(
+      "Publishing message '%u', and address: 0x%" PRIXPTR "\n",
+      msg->data, reinterpret_cast<std::uintptr_t>(msg.get()));
+    std::flush(std::cout);
+  }
   // Put the message into a queue to be processed by the middleware.
   // This call is non-blocking.
   pub_->publish(msg);

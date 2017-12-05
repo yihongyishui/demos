@@ -14,11 +14,12 @@
 
 #include "composition/listener_component.hpp"
 
+#include <cinttypes>
 #include <iostream>
 #include <memory>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/u_int32.hpp"
 
 namespace composition
 {
@@ -27,23 +28,28 @@ namespace composition
 // Components get built into shared libraries and as such do not write their own main functions.
 // The process using the component's shared library will instantiate the class as a ROS node.
 Listener::Listener()
-: Node("listener")
+: Node("listener", "", true), count_(0)
 {
   // Create a callback function for when messages are received.
   // Variations of this function also exist using, for example, UniquePtr for zero-copy transport.
   auto callback =
-    [](const typename std_msgs::msg::String::SharedPtr msg) -> void
+    [this](const typename std_msgs::msg::UInt32::UniquePtr msg) -> void
     {
-      printf("I heard: [%s]\n", msg->data.c_str());
-      std::flush(std::cout);
+      if (0 == count_ % 1000) {
+        printf(
+          "Received message #%zu, and address: 0x%" PRIXPTR "\n",
+          count_, reinterpret_cast<std::uintptr_t>(msg.get()));
+        std::flush(std::cout);
+      }
+      ++count_;
     };
 
   // Create a subscription to the "chatter" topic which can be matched with one or more
   // compatible ROS publishers.
   // Note that not all publishers on the same topic with the same type will be compatible:
   // they must have compatible Quality of Service policies.
-  sub_ = create_subscription<std_msgs::msg::String>(
-    "chatter", callback);
+  sub_ = create_subscription<std_msgs::msg::UInt32>(
+    "chatter", callback, rmw_qos_profile_sensor_data);
 }
 
 }  // namespace composition
