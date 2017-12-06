@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
 
 from launch import LaunchDescriptor
@@ -22,6 +23,10 @@ from ros2run.api import get_executable_path
 def main():
     launcher = DefaultLauncher()
     launch_descriptor = LaunchDescriptor()
+
+    # Strip the logger name from the message format in favor of the shorter executable name
+    os.environ['RCUTILS_CONSOLE_OUTPUT_FORMAT'] = '[{severity}] {message}'
+    os.environ['PYTHONUNBUFFERED'] = '1'  # force unbuffered output to get prints to sync correctly
 
     package = 'topic_monitor'
     executable = get_executable_path(package_name=package, executable_name='data_publisher')
