@@ -96,6 +96,11 @@ using TLSFAllocator = tlsf_heap_allocator<T>;
 
 int main(int argc, char * argv[])
 {
+  // force flush of the stdout buffer.
+  // this ensures a correct sync of all prints
+  // even when executed simultaneously within the launch file.
+  setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+
   // Initialization phase.
   // In the initialization phase of a realtime program, non-realtime-safe operations such as
   // allocation memory are permitted.
